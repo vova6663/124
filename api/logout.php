@@ -1,7 +1,7 @@
 <?
 if(isset($_SESSION["logout"]) && $_SESSION['logout'] === true)
 {
-    header("location:../")//Авторизированный пользователь
+    header("location:../ghost.php")
 }
 else
 {
