@@ -1,11 +1,9 @@
-<?
-if(isset($_SESSION["logout"]) && $_SESSION['logout'] === true)
-{
-    header("location:../ghost.php")
-}
-else
-{
-    header("location:../")//Не авторизированный пользователь
-}
+<?php
+// api/logout.php
+require_once 'config.php';
 
+$_SESSION = array();
+session_destroy();
+header("location: ../login.php");
+exit;
 ?>
