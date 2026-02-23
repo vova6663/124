@@ -1,8 +1,5 @@
 <?php
-// dispatcher.php
 include_once 'api/config.php';
-
-// Проверяем и добавляем колонку driver_status если её нет
 $check_column = $conn->query("SHOW COLUMNS FROM users LIKE 'driver_status'");
 if ($check_column->num_rows == 0) {
     $conn->query("ALTER TABLE users ADD COLUMN driver_status ENUM('free', 'busy', 'offline') DEFAULT 'free' AFTER role");
@@ -21,18 +18,15 @@ $user = $user_query->fetch_assoc();
 $materials_list = $conn->query("SELECT * FROM materials ORDER BY Name_Mat");
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Загрузка фото для заказа
     if (isset($_POST['upload_photos'])) {
         $order_id = intval($_POST['order_id']);
         $target_dir = "uploads/";
         
-        // Создаем папку если её нет
         if (!file_exists($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
         
         $photos = [];
-        // Обрабатываем до 3 фото
         for ($i = 1; $i <= 3; $i++) {
             $field_name = "photo" . ($i == 1 ? '' : $i);
             if (isset($_FILES[$field_name]) && $_FILES[$field_name]['error'] == 0) {
@@ -47,11 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
         
-        // Проверяем есть ли уже запись в complete_orders
         $check = $conn->query("SELECT id_C_orders FROM complete_orders WHERE id_order = $order_id");
         
         if ($check->num_rows > 0) {
-            // Обновляем существующую запись
             $sql = "UPDATE complete_orders SET ";
             $updates = [];
             if (isset($photos[1])) $updates[] = "photo = '" . $photos[1] . "'";
@@ -64,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $conn->query($sql);
             }
         } else {
-            // Создаем новую запись
             $photo1 = $photos[1] ?? 'NULL';
             $photo2 = $photos[2] ?? 'NULL';
             $photo3 = $photos[3] ?? 'NULL';
@@ -501,8 +492,6 @@ $current_tab = isset($_GET['tab']) ? $_GET['tab'] : 'orders';
         .btn-delete { background: #dc3545; color: white; }
         .btn-confirm { background: #28a745; color: white; }
         .btn-photo { background: #9C27B0; color: white; }
-
-        /* Стили для модального окна просмотра фото */
         .modal-photo {
             display: none;
             position: fixed;
