@@ -1,4 +1,5 @@
-После загрузки запустите Green_Mile/index.php
+Импортируйте green_mile.sql на phpmyadmin
+за теб запустите Green_Mile/index.php
 Роли:
 Директор:
 Login: nikolaeva_t 
