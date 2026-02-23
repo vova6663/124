@@ -52,11 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
         
-        // Проверяем есть ли уже запись в complete_orders
         $check = $conn->query("SELECT id_C_orders FROM complete_orders WHERE id_order = $order_id");
         
         if ($check->num_rows > 0) {
-            // Обновляем существующую запись
             $updates = [];
             if (isset($photos[1])) $updates[] = "photo = '" . $photos[1] . "'";
             if (isset($photos[2])) $updates[] = "photo1 = '" . $photos[2] . "'";
@@ -67,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $conn->query($sql);
             }
         } else {
-            // Создаем новую запись
             $photo1 = $photos[1] ?? 'NULL';
             $photo2 = $photos[2] ?? 'NULL';
             $photo3 = $photos[3] ?? 'NULL';
@@ -184,8 +181,6 @@ $user = $user_query->fetch_assoc();
 
 $transport_query = $conn->query("SELECT * FROM transport WHERE id_user = $user_id");
 $transport = $transport_query->num_rows > 0 ? $transport_query->fetch_assoc() : null;
-
-// Получаем активные заказы с фото
 $active_orders = $conn->query("SELECT o.*, m.Name_Mat as material_name,
                                       co.photo, co.photo1, co.photo2
                                FROM orders o 
@@ -1238,7 +1233,6 @@ $available_orders = $conn->query("SELECT o.*, m.Name_Mat as material_name
         </footer>
     </div>
 
-    <!-- Модальное окно для просмотра фото -->
     <div id="photoViewModal" class="modal-photo">
         <div class="modal-photo-content">
             <div class="modal-photo-header">
@@ -1246,12 +1240,9 @@ $available_orders = $conn->query("SELECT o.*, m.Name_Mat as material_name
                 <span class="close" onclick="closePhotoModal()">&times;</span>
             </div>
             <div id="photo-container" class="photo-grid">
-                <!-- Фото будут загружаться сюда -->
             </div>
         </div>
     </div>
-
-    <!-- Модальное окно для загрузки фото -->
     <div id="photoUploadModal" class="modal-photo">
         <div class="modal-photo-content">
             <div class="modal-photo-header">
@@ -1285,13 +1276,9 @@ $available_orders = $conn->query("SELECT o.*, m.Name_Mat as material_name
             </div>
         </div>
     </div>
-
-    <!-- Модальное окно для полноэкранного просмотра -->
     <div id="fullscreenModal" class="fullscreen-modal" onclick="closeFullscreen()">
         <img id="fullscreenImage" src="" alt="Полноэкранное фото">
     </div>
-    
-    <!-- Модальное окно для проблемы -->
     <div id="problem-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal('problem-modal')">&times;</span>
@@ -1425,8 +1412,6 @@ $available_orders = $conn->query("SELECT o.*, m.Name_Mat as material_name
                 }
             });
         }
-
-        // Функции для работы с фото
         function viewOrderPhotos(orderId, photo, photo1, photo2) {
             document.getElementById('photo-order-id').textContent = orderId;
             
